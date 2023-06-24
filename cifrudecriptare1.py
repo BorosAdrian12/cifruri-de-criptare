@@ -256,12 +256,9 @@ class AlgoCript:
 # schimba positiile
 
 
-mesaj="12345_67890"
-mesaj="dan ciotoi si florin tatar"
-mesaj="bideu"
-mesaj="litera"
-mesaj="vreau zece la licenta"
-mesaj="ma detonez in fata parlamentului"
+
+mesaj="acesta este un mesaj de test"
+
 mesaj=#mesajuldinlicenta
 a= AlgoCript()
 listArrParty=[]
