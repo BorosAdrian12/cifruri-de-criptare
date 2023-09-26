@@ -187,7 +187,7 @@ for(int i=0;i<marimeKey1;i++){
 
 pozImp=new unsigned char[vec.size*2];
 int indexMesaj=0;
-printBinary(key1,marimeKey1);cout<<endl;
+//printBinary(key1,marimeKey1);cout<<endl;
 //se implementeaza pozitile false
     for(int i=0;i<vec.size;i++){
         //cu asta ar trebuii sa fie dar inca testez si nu stiu daca ii bine sau nu
@@ -213,13 +213,13 @@ printBinary(key1,marimeKey1);cout<<endl;
         }*/
         //xor pe caracter
         //xor pe cheita
-        cout<<poz<<' ';
+        //cout<<poz<<' ';
         pozImp[i*2]=pozImp[i*2]^pozImp[i*2+1];
         pozImp[i*2+1]=pozImp[i*2+1]^key1[i%marimeKey1];
         shiftArrayLeft(copyKey1,marimeKey1,1);
 
     }
-    cout<<endl;
+    //cout<<endl;
 
 Str aux;
 aux.arr=pozImp;
@@ -258,7 +258,7 @@ mesaj=new unsigned char[marimeMesajCriptat];
             //aici ar trebuii sa faci chestia asta pt optimizare
             //mesajCriptat[i*2]=mesajCriptat[i*2]^mesajCriptat[i*2+1];
             mesaj[index]=mesajCriptat[i*2];
-            cout<<' '<<mesaj[index]<<'|'<<(char)mesajCriptat[i*2];
+            //cout<<' '<<mesaj[index]<<'|'<<(char)mesajCriptat[i*2];
             index++;
         }
         //cout<<"["<<getBit(&mesajCriptat[i*2+1],1,poz)<<getBit(copyKey1,marimeKey1,0)<<"] ";
@@ -266,13 +266,13 @@ mesaj=new unsigned char[marimeMesajCriptat];
         shiftArrayLeft(copyKey1,marimeKey1,1);
 
     }
-    cout<<endl;
+    //cout<<endl;
 
 Str aux;
 aux.arr=mesaj;
 aux.size=index;
 aux.arr[index]='\n';
-cout<<"aux:"<<aux.arr<<endl;
+//cout<<"aux:"<<aux.arr<<endl;
 return aux;
 
 
@@ -283,20 +283,20 @@ printBinary2Row(mesajCriptat,marimeMesajCriptat);cout<<endl;
 /**/
 }
 void amestecare(unsigned char* mesaj , int marimeMesaj , unsigned char* tabel , int marimeTabel){
-    cout<<endl;
+    //cout<<endl;
     for(int i=0;i<marimeMesaj;i++){
-        cout<<(i+tabel[i%marimeTabel])%marimeMesaj<<' ';
+      //  cout<<(i+tabel[i%marimeTabel])%marimeMesaj<<' ';
         swap(mesaj[i],mesaj[(i+tabel[i%marimeTabel])%marimeMesaj]);
     }
-    cout<<endl;
+    //cout<<endl;
 }
 void deAmestecare(unsigned char* mesaj , int marimeMesaj , unsigned char* tabel , int marimeTabel){
-    cout<<endl;
+    //cout<<endl;
     for(int i=marimeMesaj-1;i>=0;i--){
-        cout<<(i+tabel[i%marimeTabel])%marimeMesaj<<' ';
+        //cout<<(i+tabel[i%marimeTabel])%marimeMesaj<<' ';
         swap(mesaj[i],mesaj[(i+tabel[i%marimeTabel])%marimeMesaj]);
     }
-    cout<<endl;
+    //cout<<endl;
 }
 Str criptare(unsigned char* mesaj , int marimeMesaj , unsigned char *key1 , int marimeKey1,unsigned char *tabel , int tableSize){
 cout<<"suntem in CRIPTARE"<<endl;
@@ -351,82 +351,99 @@ for(int i=0;i<aux.size;i++)
     cout<<aux.arr[i];
 cout<<endl;
 }
-void test(){
-unsigned char *key1,tabel[]={1 ,9 ,21 ,20 ,29 ,25 ,3 ,2 ,30 ,28 ,18 ,23 ,5 ,8 ,12 ,4 ,32 ,15 ,27 ,7 ,24 ,19 ,11 ,16 ,17 ,31 ,6 ,10 ,14 ,26 ,13 ,22 };
-    int sizeKey1=8;
-    unsigned char mesaj[]="A fost odata ca nici odata!AAAAAAAA";
-    int marimeMesaj=sizeof(mesaj)/sizeof(mesaj[0]),marimeTabel=32;
-    shiftArrayLeft(mesaj,marimeMesaj,4);
-    cout<<mesaj[0]<<endl;
-    shiftArrayRight(mesaj,marimeMesaj,4);
-    cout<<mesaj<<endl;
 
-    /*amestecare(mesaj,marimeMesaj,tabel,marimeTabel);
-    for(int i=0;i<marimeMesaj;i++)
-        cout<<mesaj[i]<<'['<<(int)mesaj[i]<<']';
-    cout<<endl;
-    deAmestecare(mesaj,marimeMesaj,tabel,marimeTabel);
-    for(int i=0;i<marimeMesaj;i++)
-        cout<<mesaj[i]<<'['<<(int)mesaj[i]<<']';
-    cout<<endl;
-    cout<<mesaj<<endl;
-    */
+void regenerateTable(unsigned char *tabel,int marimeTabel){
+    unsigned char *newTabe=new unsigned char[marimeTabel];
+    //-1 pt ca ultima o ia pe prima
+    for(int i=0;i<marimeTabel-1;i++){
+        //-1 ii pentru rectificarea in memorie
+        newTabe[tabel[i]-1]=tabel[i+1];
+    }
+
+    newTabe[tabel[marimeTabel-1]-1]=tabel[0];
+    for(int i=0;i<marimeTabel;i++){
+        bool flag=1;
+        for(int j=0;j<marimeTabel;j++)
+            if(tabel[j]==newTabe[i]){
+                flag=0;
+                break;
+            }
+        if(flag){
+            cout<<"EROARE"<<endl;
+        }
+    }
+    for(int i=0;i<marimeTabel;i++){
+        tabel[i]=newTabe[i];
+    }
 }
 
 Str Criptare(unsigned char* mesaj , int marimeMesaj , unsigned char *key1 , int marimeKey1,unsigned char *tabel , int marimeTabel){
 ArrayTransport vecPoz;
 vecPoz=generateFalsePosition(marimeMesaj);
-/*
-for(int i=0;i<vecPoz.size;i++)
-    cout<<vecPoz.arr[i]<<' ';
-cout<<endl;
 
-
-*/
-for(int i=0;i<marimeMesaj;i++)
-        cout<<mesaj[i]<<'['<<(int)mesaj[i]<<']';
-    cout<<endl;
 Str mesajCuPozitiFalse;
 mesajCuPozitiFalse=implementFalsePosition(mesaj,marimeMesaj,vecPoz,key1,marimeKey1);
-cout<<"-=== MARIME DUPA IMPLEMENTARE LITERE FALSE:"<<mesajCuPozitiFalse.size<<endl;
-
-//printBinary2Row(mesajCuPozitiFalse.arr,mesajCuPozitiFalse.size);cout<<endl;
-
-//printBinary2Row(mesajCuPozitiFalse.arr,mesajCuPozitiFalse.size);
-
-for(int i=0;i<1;i++){
-    shiftArrayLeft(mesajCuPozitiFalse.arr,mesajCuPozitiFalse.size,4);
+int iteratii=6;
+for(int i=0;i<iteratii;i++){
+    //shiftArrayLeft(mesajCuPozitiFalse.arr,mesajCuPozitiFalse.size,4);
     amestecare(mesajCuPozitiFalse.arr,mesajCuPozitiFalse.size,tabel,marimeTabel);
+    regenerateTable(tabel,marimeTabel);
+    for(int i=0;i<marimeTabel;i++){
+            cout<<setw(2)<<(int)tabel[i]<<' ';
+        }
+        cout<<endl;
 }
 return mesajCuPozitiFalse;
 }
 Str Decriptare(unsigned char* mesaj , int marimeMesaj , unsigned char *key1 , int marimeKey1,unsigned char *tabel , int marimeTabel){
+unsigned char **listaTabele;int iteratii=6;
 
-    cout<<"---din decriptarea noua---"<<endl;
-    cout<<"marime mesaj criptat:"<<marimeMesaj;
-    //printBinary2Row(mesaj,marimeMesaj);
+listaTabele=new unsigned char*[iteratii];
 
-    //printBinary2Row(mesaj,marimeMesaj);
+for(int i=0;i<iteratii;i++){
+    listaTabele[i]=new unsigned char[marimeTabel];
+    for(int j=0;j<marimeTabel;j++){
+        listaTabele[i][j]=tabel[j];
+    }
+    regenerateTable(tabel,marimeTabel);
+}
 
-    for(int i=0;i<1;i++){
-        deAmestecare(mesaj,marimeMesaj,tabel,marimeTabel);
-        shiftArrayRight(mesaj,marimeMesaj,4);
+
+
+
+
+    for(int i=0;i<iteratii;i++){
+        deAmestecare(mesaj,marimeMesaj,listaTabele[iteratii-i-1],marimeTabel);
+       // shiftArrayRight(mesaj,marimeMesaj,4);
+       for(int j=0;j<marimeTabel;j++){
+            cout<<setw(2)<<(int)listaTabele[i][j]<<' ';
+        }
+        cout<<endl;
     }
 
     Str aux = deimplementatFalsePosition(mesaj,marimeMesaj,key1,marimeKey1);
-    cout<<"--=am revenit in main decriptare=--"<<endl;
-    cout<<"intru in for pt a vedea ce sunt in el"<<endl;
-    for(int i=0;i<aux.size;i++)
-        cout<<aux.arr[i]<<'['<<(int)aux.arr[i]<<']';
-    cout<<endl;
-    //cout<<aux.arr<<" -=- "<<aux.size<<endl;
 
     return aux;
 }
-void program(){
+void test(){
 unsigned char *key1,tabel[]={1 ,9 ,21 ,20 ,29 ,25 ,3 ,2 ,30 ,28 ,18 ,23 ,5 ,8 ,12 ,4 ,32 ,15 ,27 ,7 ,24 ,19 ,11 ,16 ,17 ,31 ,6 ,10 ,14 ,26 ,13 ,22 };
     int sizeKey1=8;
-    unsigned char mesaj[]="A fost odata ca nici odata!";
+    unsigned char mesaj[]="A fost odata ca nici odata!AAAAAAAA";
+    int marimeTabel=32;
+    for(int i=0;i<10;i++){
+        regenerateTable(tabel,marimeTabel);
+        for(int i=0;i<marimeTabel;i++){
+            cout<<setw(2)<<(int)tabel[i]<<' ';
+        }
+        cout<<endl;
+    }
+
+}
+void program(){
+unsigned char *key1,tabel[]={1 ,9 ,21 ,20 ,29 ,25 ,3 ,2 ,30 ,28 ,18 ,23 ,5 ,8 ,12 ,4 ,32 ,15 ,27 ,7 ,24 ,19 ,11 ,16 ,17 ,31 ,6 ,10 ,14 ,26 ,13 ,22 };
+unsigned char copytabel[]={1 ,9 ,21 ,20 ,29 ,25 ,3 ,2 ,30 ,28 ,18 ,23 ,5 ,8 ,12 ,4 ,32 ,15 ,27 ,7 ,24 ,19 ,11 ,16 ,17 ,31 ,6 ,10 ,14 ,26 ,13 ,22 };
+    int sizeKey1=8;
+    unsigned char mesaj[]="A fost odata ca nici odata! acesta este o alta bucata de text si vreau sa testez daca merge !";
     int marimeMesaj=sizeof(mesaj)/sizeof(mesaj[0]),marimeTabel=32;
     /*
     ,TABLE[]={5 ,25 ,6 ,32 ,16 ,19 ,15 ,17 ,11 ,29 ,3 ,7 ,4 ,27 ,23 ,20 ,24 ,9 ,26 ,2 ,10 ,28 ,18 ,31 ,8 ,1 ,12 ,21 ,14 ,22 ,30 ,13}
@@ -450,12 +467,12 @@ unsigned char *key1,tabel[]={1 ,9 ,21 ,20 ,29 ,25 ,3 ,2 ,30 ,28 ,18 ,23 ,5 ,8 ,1
     mesajCriptat=Criptare(mesaj,marimeMesaj,key1,sizeKey1,tabel,marimeTabel);
     cout<<"-=-=-=- IN PROGRAM | MARIME MESAJ CRIPTAT :"<<mesajCriptat.size<<endl;
     //printBinary2Row(mesajCriptat.arr,mesajCriptat.size);cout<<endl;
-    key1[1]='a';
+    //key1[1]='a';
     //tabel[0]=9;
-    //tabel[1]=25;
+    //tabel[1]=4;
     //tabel[5]=1;
     //tabel[7]=2;
-    mesajCriptat=Decriptare(mesajCriptat.arr,mesajCriptat.size,key1,sizeKey1,tabel,marimeTabel);
+    mesajCriptat=Decriptare(mesajCriptat.arr,mesajCriptat.size,key1,sizeKey1,copytabel,marimeTabel);
     cout<<"Final : mesaj decriptat:"<<mesajCriptat.arr<<endl;
 }
 
@@ -469,104 +486,4 @@ program();
     return 0;
     }
 
-/*
-printBinary(key1,sizeKey1);cout<<endl;
-    cout<<endl<<"test"<<endl;
-    for(int i=0;i<sizeKey1;i++){
-        cout<<key1[i]<<' ';
-    }
-    cout<<endl;
-    for(int i=0;i<marimeTabel;i++){
-            cout<<(int)tabel[i]<<' ';
-        }
-    cout<<endl;
-    cout<<"mesajul "<<mesaj<<endl;
-    Str mesajCriptare;
-    mesajCriptare=criptare(mesaj,marimeMesaj,key1,sizeKey1,tabel,marimeTabel);
-    //printBinary2Row(mesajCriptare.arr,mesajCriptare.size);
 
-    for(int i=0;i<mesajCriptare.size;i++){
-        if(i%10==0){
-            cout<<endl;
-        }
-
-        cout<<setw(3)<<(int)mesajCriptare.arr[i]<<' ';
-    }
-    cout<<endl;
-
-
-    cout<<endl<<"test"<<endl;
-    for(int i=0;i<sizeKey1;i++){
-        cout<<key1[i]<<' ';
-    }
-    cout<<endl;
-
-    deCriptare(mesajCriptare.arr,mesajCriptare.size,key1,sizeKey1,tabel,marimeTabel);
-    cout<<"mesajul decriptat :"<<mesajCriptare.arr<<endl;
-*/
-
-    // Seed the random number generator with the current time
-    /*
-    srand(time(NULL));
-    unsigned char array[] = {0b00110011, 0b10101010, 'B', 0, 'C'}; // Example array
-    int numBits = 2; // Number of bits to shift (between 1 and 8)
-    int size=sizeof(array)/sizeof(array[0]);
-    int shift=8 ,i=0;
-    //printBinary(array,size);
-    //asta ii daca vrei sa tiparesti hex  cout<<endl<<hex<<setw(2)<<setfill('0')<<(int)15<<endl;
-    //array[0]=((array[i]<<shift)|(array[i+1]>>(8-shift)));
-    //cout<<endl;
-    //shiftArrayRight(array,size,shift);
-    //printBinary(array,size);
-
-
-    printBinary(array,size);
-    //cout<<endl<<getBit(array,size,1);
-    cout<<endl;
-    for(int i=0;i<size*8;i++){
-        if(i%8==0&&i!=0){
-            cout<<'-';
-        }
-        cout<<getBit(array,size,i);
-    }
-    //return 0;
-    cout<<endl;
-
-
-
-
-    unsigned char x[]={0b11111111,0b11111111,0b11111111,0b11111111,0b11111111,0b11111111,0b11111111,0b11111111};
-
-
-    for(int i=0;i<8;i++){
-        letSetBit(&x[i],0,i);
-        cout<<endl;
-    }
-    printBinary(x,8);
-    //return 0;*/
-    //test();
-    //return 0 ;
-
-
-    /*
-    Str aux =generateTable(32);
-    for(int i=0;i<aux.size;i++)
-        cout<<(int)aux.arr[i]<<" ,";
-*/
-/*
-    ArrayTransport aux=generateFalsePosition(32);
-    int *a=aux.arr;
-    int positionArraySize=aux.size;
-
-    unsigned char mesaj[]="buna";
-    int marimeMesaj=sizeof(mesaj)/sizeof(mesaj[0]);
-    //cout<<marimeMesaj<<endl;
-    printBinary(mesaj,marimeMesaj);
-    cout<<endl;
-    for(int i=0;i<aux.size;i++)
-        cout<<aux.arr[i];
-    //cout<<positionArraySize<<endl;
-    //criptare(array)
-    return 0;
-}
-*/
